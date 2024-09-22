@@ -56,25 +56,39 @@ const username = req.body.username
 
 async function run(){
   await User.create({username: username})
-  
 
   const jsonResponse = await User.findOne({username: username}).exec();
   
-  const jsonParsed = JSON.parse('{"username":true, "count":42}')
+res.json({username: jsonResponse.username, _id: jsonResponse.id})
 
-res.json({username: jsonResponse.username, id: jsonResponse.id})
-
-  
 }
 run();
+})
+
+app.post('/api/users/:_id/exercises',(req,res) => {
+
+  const responseForm = req.body[':_id']
+
+  console.log(responseForm)
+
+  async function creatingExe() {
+    const query = { _id: responseForm };
+    console.log(query)
+User.findOneAndUpdate(query, { description: req.body.description, duration: req.body.duration }).exec()
+res.json(User.findOne({_id: responseForm}).exec())  
+}
+
+creatingExe()
 
 })
 
-app.post('/api/users/:_id/exercises',(req,res) =>
-{
+app.get('/api/users', async (req,res) => {
+
+const responseArray = await User.find({})
+
+res.json(responseArray)
 
 })
-
 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
