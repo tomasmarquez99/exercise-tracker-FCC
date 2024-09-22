@@ -56,13 +56,24 @@ const username = req.body.username
 
 async function run(){
   await User.create({username: username})
+  
+
+  const jsonResponse = await User.findOne({username: username}).exec();
+  
+  const jsonParsed = JSON.parse('{"username":true, "count":42}')
+
+res.json({username: jsonResponse.username, id: jsonResponse.id})
+
+  
 }
 run();
 
 })
 
 app.post('/api/users/:_id/exercises',(req,res) =>
-{})
+{
+
+})
 
 
 
